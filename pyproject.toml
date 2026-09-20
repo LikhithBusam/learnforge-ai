@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "studycompanion-backend"
+version = "0.1.0"
+description = "AI Study Companion — backend API, worker, and shared platform (modular monolith + worker plane)"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "pydantic>=2.5",
+    "pydantic-settings>=2.1",
+    "sqlalchemy[asyncio]>=2.0.25",
+    "alembic>=1.13",
+    "asyncpg>=0.29",
+    "redis>=5.0",
+    "celery[redis]>=5.3",
+    "httpx>=0.26",
+    "python-json-logger>=2.0",
+    "argon2-cffi>=23.1",
+    "pyjwt[crypto]>=2.8",
+    "pgvector>=0.2.5",
+    "pymupdf>=1.24.0",
+    "google-genai>=2.0",
+]
+
+[project.optional-dependencies]
+storage = ["minio>=7.2", "botocore>=1.34"]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "httpx>=0.26",
+    "mypy>=1.8",
+    "ruff>=0.2",
+    "black>=24.1",
+    "types-redis",
+]
+
+[tool.setuptools]
+package-dir = {"" = "apps/api/src"}
+
+[tool.setuptools.packages.find]
+where = ["apps/api/src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["apps/api/src"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+addopts = "-q"
+markers = [
+    "isolation: RLS project-isolation proofs (require cloud DB credentials)",
+    "security: security-control tests (require cloud DB credentials)",
+    "auth: authentication tests (require cloud DB credentials)",
+]
+
+[tool.mypy]
+python_version = "3.10"
+mypy_path = "apps/api/src"
+packages = ["app"]
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_unused_ignores = false
+warn_redundant_casts = true
+no_implicit_optional = true
+plugins = []
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "B008"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]

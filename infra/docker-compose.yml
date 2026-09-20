@@ -1,0 +1,73 @@
+# Local development infrastructure (Phase 0) — ADR-0013/0014/0016.
+# Deterministic service names, health checks, persistent dev volumes.
+# The API/worker run on the host during development (see docs/engineering/local-development.md).
+# Redis is broker/cache ONLY — never the system of record (ADR-0014).
+
+name: studycompanion
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: studycompanion-postgres
+    environment:
+      POSTGRES_USER: studycompanion
+      POSTGRES_PASSWORD: studycompanion_dev_password
+      POSTGRES_DB: studycompanion
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U studycompanion -d studycompanion"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  redis:
+    image: redis:7-alpine
+    container_name: studycompanion-redis
+    command: ["redis-server", "--appendonly", "no"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  minio:
+    # MinIO publishes images on quay.io (docker.io mirror no longer exists).
+    image: quay.io/minio/minio:latest
+    container_name: studycompanion-minio
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: studycompanion_dev_key
+      MINIO_ROOT_PASSWORD: studycompanion_dev_secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  # One-shot bucket provisioning (idempotent) — runs after MinIO is healthy.
+  minio-init:
+    image: quay.io/minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MC_HOST_local: http://studycompanion_dev_key:studycompanion_dev_secret@minio:9000
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["mc mb --ignore-existing local/${STORAGE_BUCKET:-studycompanion-dev} && mc anonymous set none local/${STORAGE_BUCKET:-studycompanion-dev}"]
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

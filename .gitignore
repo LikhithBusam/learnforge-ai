@@ -1,0 +1,65 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment files — ONLY .env.example may be committed (security baseline §1)
+.env
+.env.*
+!.env.example
+
+# Test / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+
+# Type checking / lint caches
+.mypy_cache/
+.ruff_cache/
+
+# Node / frontend
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# Databases / local state (dev volumes are Docker-managed; keep stray files out)
+*.sqlite3
+*.db
+
+# MinIO / local object data
+infra/data/
+
+# Infrastructure
+terraform/.terraform/
+terraform/*.tfstate*
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Tool caches
+.freebuff/
+
+# Workflows (requires specific OAuth workflow scope)
+.github/

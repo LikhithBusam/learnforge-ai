@@ -1,0 +1,2 @@
+# Migration versions land with the database-schema phase (RLS included then).
+# See docs/architecture/adr/ADR-0013 and phase-0-acceptance.md §known-limitations.
