@@ -34,6 +34,7 @@ htmlcov/
 
 # Node / frontend
 node_modules/
+dist/
 .next/
 out/
 *.tsbuildinfo
