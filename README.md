@@ -83,6 +83,28 @@ scripts/      Developer tooling (boundary enforcement, etc.)
 
 ---
 
+## Render Deployment
+
+### 🔧 Backend (Web Service)
+
+| Setting | Value |
+|---|---|
+| **Root Directory** | `apps/api` |
+| **Build Command** | `pip install -e ../../.` |
+| **Start Command** | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+
+### 🌐 Frontend (Static Site)
+
+| Setting | Value |
+|---|---|
+| **Root Directory** | `packages/web` |
+| **Build Command** | `npm install && npm run build` |
+| **Publish Directory** | `packages/web/dist` |
+
+> ⚠️ Set all environment variables (DATABASE_URL, REDIS_URL, GEMINI_API_KEY, SUPABASE_*, JWT_SECRET, VITE_API_URL) in the Render **Environment** tab. Never hardcode secrets.
+
+---
+
 ## Quick Start
 
 ### Prerequisites
