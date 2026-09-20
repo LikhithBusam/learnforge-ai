@@ -1,4 +1,4 @@
-[build-system]
+﻿[build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
@@ -39,13 +39,13 @@ dev = [
 ]
 
 [tool.setuptools]
-package-dir = {"" = "apps/api/src"}
+package-dir = {"" = "backend/src"}
 
 [tool.setuptools.packages.find]
-where = ["apps/api/src"]
+where = ["backend/src"]
 
 [tool.pytest.ini_options]
-pythonpath = ["apps/api/src"]
+pythonpath = ["backend/src"]
 testpaths = ["tests"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
@@ -59,7 +59,7 @@ markers = [
 
 [tool.mypy]
 python_version = "3.10"
-mypy_path = "apps/api/src"
+mypy_path = "backend/src"
 packages = ["app"]
 ignore_missing_imports = true
 check_untyped_defs = true
